@@ -1,0 +1,1 @@
+g++ BluePentagon.cpp -o BluePentagon -lGL -lGLEW -lglfw
