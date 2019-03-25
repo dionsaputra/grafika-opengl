@@ -8,6 +8,7 @@ void processInput(GLFWwindow *window){
 }
 
 int main() {
+    int numOfTriangle = 92;
     GLFWwindow* window = Core::createWindow(600, 600, "Multicolor Pentagon");
 
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
@@ -52,7 +53,7 @@ int main() {
         // glUseProgram(shaderProgram);
         shader.use();
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 3*numOfTriangle, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
