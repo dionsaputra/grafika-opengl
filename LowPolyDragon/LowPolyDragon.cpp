@@ -1,6 +1,5 @@
 #include "../Util/Core.hpp"
 #include "../Util/Shader.hpp"
-#include "../Util/Parser.hpp"
 
 void processInput(GLFWwindow *window){
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -12,15 +11,20 @@ int main() {
 
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
-    vector<float> verticesVector = Parser::loadPoints("Vertices.txt");
-    vector<unsigned int> indicesVector = Parser::loadIndices("Indices.txt");
+    float vertices[] = {
+        -0.6, -0.9, 0, 1, 0, 0,
+        0.6, -0.9, 0, 1, 1, 0,
+        0.97, 0.14, 0, 0.5, 0.5, 0.5,
+        0, 0.85f, 0, 0, 1, 1,
+        -0.97, 0.14, 0, 0, 0, 1
+    }; 
 
-    float vertices[verticesVector.size() + 1];
-    unsigned int indices[indicesVector.size() + 1];
+    unsigned int indices[] = {
+        0,1,2,
+        2,3,4,
+        4,0,2,
+    };
 
-    for (int i=0; i<verticesVector.size(); i++) vertices[i] = verticesVector[i];
-    for (int i=0; i<indicesVector.size(); i++) indices[i] = indicesVector[i];
-    
     unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
