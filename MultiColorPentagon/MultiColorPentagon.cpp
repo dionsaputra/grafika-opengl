@@ -1,4 +1,5 @@
-#include "../Core/Core.hpp"
+#include "../Util/Core.hpp"
+#include "../Util/Shader.hpp"
 
 void processInput(GLFWwindow *window){
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -8,24 +9,7 @@ void processInput(GLFWwindow *window){
 int main() {
     GLFWwindow* window = Core::createWindow(600, 600, "Multicolor Pentagon");
 
-    unsigned int vertexShader, fragmentShader, shaderProgram;
-    if (!Core::compileShader(&vertexShader, true)) {
-        return -1;
-        perror("Error compiling vertex shader");
-    }
-
-    if (!Core::compileShader(&fragmentShader, false)) {
-        return -1;
-        perror("Error compiling fragment shader");
-    }
-    
-    if (!Core::createShader(&shaderProgram, vertexShader, fragmentShader)) {
-        return -1;
-        perror("Error link in shader program");
-    }
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
     float vertices[] = {
         -0.6, -0.9, 0, 1, 0, 0,
@@ -51,7 +35,6 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
@@ -70,7 +53,8 @@ int main() {
         processInput(window);
         glClearColor(0,0,0,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        glUseProgram(shaderProgram);
+        // glUseProgram(shaderProgram);
+        shader.use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
