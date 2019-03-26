@@ -13,7 +13,7 @@ int main() {
 
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
-    vector<float> verticesVector = Parser::loadPoints("Vertices.txt", true, 5);
+    vector<float> verticesVector = Parser::loadPoints("Vertices.txt", true, 100);
     vector<unsigned int> indicesVector = Parser::loadIndices("Indices.txt");
 
     float vertices[verticesVector.size() + 1];
