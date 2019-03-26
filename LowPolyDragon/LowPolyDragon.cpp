@@ -8,11 +8,12 @@ void processInput(GLFWwindow *window){
 }
 
 int main() {
+    int numOfTriangle = 92;
     GLFWwindow* window = Core::createWindow(600, 600, "Multicolor Pentagon");
 
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
-    vector<float> verticesVector = Parser::loadPoints("Vertices.txt");
+    vector<float> verticesVector = Parser::loadPoints("Vertices.txt", true, 5);
     vector<unsigned int> indicesVector = Parser::loadIndices("Indices.txt");
 
     float vertices[verticesVector.size() + 1];
@@ -52,7 +53,7 @@ int main() {
         // glUseProgram(shaderProgram);
         shader.use();
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 3*numberOfTriangle, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 3*numOfTriangle, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
