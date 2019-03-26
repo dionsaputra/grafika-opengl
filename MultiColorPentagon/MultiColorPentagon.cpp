@@ -8,18 +8,12 @@ void processInput(GLFWwindow *window){
 }
 
 int main() {
-    GLFWwindow* window = Core::createWindow(600, 600, "Multicolor Pentagon");
+    GLFWwindow* window = Core::createWindow(800, 800, "Multicolor Pentagon");
 
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
-    vector<float> verticesVector = Parser::loadPoints("Vertices.txt");
-    vector<unsigned int> indicesVector = Parser::loadIndices("Indices.txt");
-
-    float vertices[verticesVector.size() + 1];
-    unsigned int indices[indicesVector.size() + 1];
-
-    for (int i=0; i<verticesVector.size(); i++) vertices[i] = verticesVector[i];
-    for (int i=0; i<indicesVector.size(); i++) indices[i] = indicesVector[i];
+    vector<float> vertices = Parser::loadPoints("Vertices.txt");
+    vector<unsigned int> indices = Parser::loadIndices("Indices.txt");
     
     unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -29,10 +23,10 @@ int main() {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indices.size(), &indices[0], GL_STATIC_DRAW);
 
     // position attribute    
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);
