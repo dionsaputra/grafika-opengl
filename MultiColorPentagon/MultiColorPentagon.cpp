@@ -9,7 +9,6 @@ void processInput(GLFWwindow *window){
 
 int main() {
     GLFWwindow* window = Core::createWindow(800, 800, "Multicolor Pentagon");
-
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
     vector<float> vertices = Parser::loadPoints("Vertices.txt");
