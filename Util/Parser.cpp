@@ -19,7 +19,7 @@ vector<float> Parser::parsePoint(string pointString, bool randomizeColor, int va
     vector<float> pointComponent;
     
     // take coordinat component [x,y,z]
-    for (int i=0; i<3;/*i<pointComponentString.size();*/ i++) {
+    for (int i=0; i<3; i++) {
         pointComponent.push_back(strtof(pointComponentString[i].c_str(), NULL));
     }
 
