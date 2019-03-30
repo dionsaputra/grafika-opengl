@@ -13,12 +13,27 @@ vector<string> Parser::split(string str, string sep){
 }
 
 // parse (x,y,z,r,g,b) to vector of float
-vector<float> Parser::parsePoint(string pointString) {
+vector<float> Parser::parsePoint(string pointString, bool randomizeColor, int varietyColor) {
     // ["x", "y", "z", "r", "g", "b"]
     vector<string> pointComponentString = Parser::split(pointString.substr(1, pointString.length()-2), ",");
     vector<float> pointComponent;
-    for (int i=0; i<pointComponentString.size(); i++) {
+    
+    // take coordinat component [x,y,z]
+    for (int i=0; i<3;/*i<pointComponentString.size();*/ i++) {
         pointComponent.push_back(strtof(pointComponentString[i].c_str(), NULL));
+    }
+
+    // take color component [r,g,b]
+    if (randomizeColor) {
+        for (int i=0; i<3; i++) {
+            int randInt = rand()%varietyColor;
+            double randDouble = (1.0*randInt)/(varietyColor*1.0);
+            pointComponent.push_back(randDouble);
+        }
+    } else {
+        for (int i=3; i<pointComponentString.size(); i++) {
+            pointComponent.push_back(strtof(pointComponentString[i].c_str(), NULL));
+        }   
     }
 
     // [x,y,z,r,g,b]
@@ -38,7 +53,7 @@ vector<unsigned int> Parser::parseIndex(string indexString) {
     return indexComponent;
 }
 
-vector<float> Parser::loadPoints(string filename) {
+vector<float> Parser::loadPoints(string filename, bool randomizeColor, int varietyColor) {
     ifstream file;
     vector<float> points;
     file.open(filename);
@@ -46,7 +61,7 @@ vector<float> Parser::loadPoints(string filename) {
         string line;
         while (getline(file, line)) {
             if (line != "") {
-                vector<float> point = Parser::parsePoint(line);
+                vector<float> point = Parser::parsePoint(line, randomizeColor, varietyColor);
                 for (int i=0; i<point.size(); i++) {
                     points.push_back(point[i]);
                 }
