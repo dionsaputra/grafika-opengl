@@ -98,17 +98,35 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
 
+    vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);
+    vec3 cameraTarget = vec3(0.0f, 0.0f, 0.0f);
+    vec3 cameraDirection = normalize(cameraPos - cameraTarget);
+
+    vec3 up = vec3(0.0f, 1.0f, 0.0f);
+    vec3 cameraRight = normalize(cross(up, cameraDirection));
+    vec3 cameraUp = cross(cameraDirection, cameraRight);
+
+    float radius = 10.0f;
+
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
         glClearColor(0,0,0,1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use();
 
+        float camX = sin(glfwGetTime()) * radius;
+        float camZ = cos(glfwGetTime()) * radius;
+
+        mat4 view;
+        view = lookAt(
+            vec3(camX, 0.0f, camZ),
+            vec3(0.0f, 0.0f, 0.0f),
+            vec3(0.0f, 1.0f, 0.0f)
+        );
+
         mat4 model = mat4(1.0f);
-        mat4 view = mat4(1.0f);
         mat4 projection = mat4(1.0f);
 
-        view = translate(view, vec3(0.0f,0.0f,-3.0f));
         projection = perspective(radians(45.0f), screenWidth/screenHeight, 0.1f, 100.0f);
     
         int modelLoc = glGetUniformLocation(shader.id, "model");

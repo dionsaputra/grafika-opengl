@@ -8,6 +8,7 @@ void processInput(GLFWwindow *window){
 }
 
 int main() {
+    srand(time(NULL));
     int numOfTriangle = 92;
     GLFWwindow* window = Core::createWindow(800, 800, "Multicolor Pentagon");
 
