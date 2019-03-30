@@ -2,7 +2,8 @@ COMP = g++
 FLAG = -o
 INPT = LowPolyDragon.cpp
 UTIL = ../Util/Parser.cpp ../Util/Shader.cpp ../Util/Core.cpp 
-FBCK = -lGL -lGLEW -lglfw
+FBCK = -lXrandr -lXrender -lXi -lGLEW -lGLU -lm -lGL -lm -lpthread -pthread -ldl -ldrm -lXdamage -lXfixes -lX11-xcb -lxcb-glx -lxcb-dri2 -lXxf86vm -lXext -lglfw3 -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp
+
 OUTP = app
 
 all : program1
