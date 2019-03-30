@@ -42,6 +42,7 @@ const float screenHeight = 800;
 bool firstMouse = true;
 float lastX = 400, lastY = 300;
 float myYaw = -90.0f, myPitch = 0.0f;
+float fov = 45.0f;
 
 void mouseCallback(GLFWwindow* window, double xPos, double yPos) {    
     if (firstMouse) {
@@ -73,12 +74,19 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos) {
     cameraFront = normalize(front);
 }
 
+void scrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+    if (fov >= 1.0f && fov <= 45.0f) fov -= yOffset;
+    if (fov <= 1.0f) fov = 1.0f;
+    if (fov >= 45.0f) fov = 45.0f;
+}
+
 int main() {
     GLFWwindow* window = Core::createWindow(screenWidth, screenHeight, "Multicolor Pentagon");
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     glEnable(GL_DEPTH_TEST);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetScrollCallback(window, scrollCallback); 
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
@@ -174,7 +182,7 @@ int main() {
         mat4 projection = mat4(1.0f);
         mat4 view = lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
-        projection = perspective(radians(45.0f), screenWidth/screenHeight, 0.1f, 100.0f);
+        projection = perspective(radians(fov), screenWidth/screenHeight, 0.1f, 100.0f);
     
         int modelLoc = glGetUniformLocation(shader.id, "model");
         int viewLoc = glGetUniformLocation(shader.id, "view");
