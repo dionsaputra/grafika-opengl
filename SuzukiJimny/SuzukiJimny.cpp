@@ -8,9 +8,32 @@ using namespace glm;
 #include "../Util/Shader.hpp"
 #include "../Util/Parser.hpp"
 
+vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);
+vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
+vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 void processInput(GLFWwindow *window){
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    float cameraSpeed = 2.5f * deltaTime;
+
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        cameraPos += cameraSpeed * cameraFront;
+    }
+        
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
+        cameraPos -= cameraSpeed * cameraFront;
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
+        cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
+        cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+    
 }
 
 const float screenWidth = 800;
@@ -98,34 +121,22 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
 
-    vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);
-    vec3 cameraTarget = vec3(0.0f, 0.0f, 0.0f);
-    vec3 cameraDirection = normalize(cameraPos - cameraTarget);
-
-    vec3 up = vec3(0.0f, 1.0f, 0.0f);
-    vec3 cameraRight = normalize(cross(up, cameraDirection));
-    vec3 cameraUp = cross(cameraDirection, cameraRight);
-
     float radius = 10.0f;
 
     while (!glfwWindowShouldClose(window)) {
+
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         processInput(window);
         glClearColor(0,0,0,1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use();
 
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
-
-        mat4 view;
-        view = lookAt(
-            vec3(camX, 0.0f, camZ),
-            vec3(0.0f, 0.0f, 0.0f),
-            vec3(0.0f, 1.0f, 0.0f)
-        );
-
         mat4 model = mat4(1.0f);
         mat4 projection = mat4(1.0f);
+        mat4 view = lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         projection = perspective(radians(45.0f), screenWidth/screenHeight, 0.1f, 100.0f);
     
