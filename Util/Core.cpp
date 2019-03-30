@@ -16,7 +16,7 @@ GLFWwindow* Core::createWindow(int width, int height, const char* title) {
     }
     glfwMakeContextCurrent(window);
     glewInit();
+    
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-
     return window;
 }

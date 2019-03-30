@@ -39,10 +39,46 @@ void processInput(GLFWwindow *window){
 const float screenWidth = 800;
 const float screenHeight = 800;
 
+bool firstMouse = true;
+float lastX = 400, lastY = 300;
+float myYaw = -90.0f, myPitch = 0.0f;
+
+void mouseCallback(GLFWwindow* window, double xPos, double yPos) {    
+    if (firstMouse) {
+        lastX = xPos;
+        lastY = yPos;
+        firstMouse = false;
+    }
+
+    float xOffset = xPos - lastX;
+    float yOffset = lastY - yPos;
+    lastX = xPos;
+    lastY = yPos;
+
+    float sensitivity = 0.05f;
+    xOffset *= sensitivity;
+    yOffset *= sensitivity;
+
+    myYaw += xOffset;
+    myPitch += yOffset;
+
+    if (myPitch > 89.0f) myPitch = 89.0f;
+    if (myPitch < -89.0f) myPitch = -89.0f;
+
+    vec3 front = vec3(
+        cos(radians(myPitch)) * cos(radians(myYaw)),
+        sin(radians(myPitch)),
+        cos(radians(myPitch)) * sin(radians(myYaw))
+    );
+    cameraFront = normalize(front);
+}
+
 int main() {
     GLFWwindow* window = Core::createWindow(screenWidth, screenHeight, "Multicolor Pentagon");
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     glEnable(GL_DEPTH_TEST);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouseCallback);
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
