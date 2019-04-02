@@ -1,7 +1,7 @@
 COMP = g++
 FLAG = -o
 INPT = LowPolyDragon.cpp
-UTIL = ../Util/Parser.cpp ../Util/Shader.cpp ../Util/Core.cpp 
+UTIL = ../Util/Parser.cpp ../Util/Shader.cpp
 FBCK = -lGL -lGLEW -lglfw
 OUTP = app
 

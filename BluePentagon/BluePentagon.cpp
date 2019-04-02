@@ -4,7 +4,7 @@
 #define SCREEN_WIDTH 500
 #define SCREEN_HEIGHT 500
 
-int main( void ) {
+int main() {
     
     if (!glfwInit()) {
         return -1;

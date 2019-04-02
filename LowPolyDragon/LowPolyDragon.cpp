@@ -1,6 +1,26 @@
-#include "../Util/Core.hpp"
 #include "../Util/Shader.hpp"
 #include "../Util/Parser.hpp"
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height){
+    glViewport(0, 0, width, height);
+}
+
+GLFWwindow* createWindow(int width, int height, const char* title) {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
+    if (window == NULL){
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+    }
+    glfwMakeContextCurrent(window);
+    glewInit();
+    
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    return window;
+}
 
 void processInput(GLFWwindow *window){
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -10,7 +30,7 @@ void processInput(GLFWwindow *window){
 int main() {
     srand(time(NULL));
     int numOfTriangle = 92;
-    GLFWwindow* window = Core::createWindow(800, 800, "Multicolor Pentagon");
+    GLFWwindow* window = createWindow(800, 800, "Multicolor Pentagon");
 
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
