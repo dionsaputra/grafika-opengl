@@ -20,8 +20,8 @@ enum Camera_Movement {
 // Default camera values
 const float YAW         = -90.0f;
 const float PITCH       =  0.0f;
-const float SPEED       =  2.5f;
-const float SENSITIVITY =  0.1f;
+const float SPEED       =  2.0f;
+const float SENSITIVITY =  0.03f;
 const float ZOOM        =  45.0f;
 
 
@@ -120,11 +120,11 @@ private:
     void updateCameraVectors()
     {
         // Calculate the new Front vector
-        // glm::vec3 front;
-        // front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        // front.y = sin(glm::radians(Pitch));
-        // front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        // Front = glm::normalize(front);
+        glm::vec3 front;
+        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        front.y = sin(glm::radians(Pitch));
+        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        Front = glm::normalize(front);
         // Also re-calculate the Right and Up vector
         Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
         Up    = glm::normalize(glm::cross(Right, Front));

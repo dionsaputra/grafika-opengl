@@ -77,3 +77,8 @@ void Shader::checkCompileErrors(unsigned int shader, string type) {
 void Shader::use() {
     glUseProgram(id);
 }
+
+void Shader::setMat4(const GLchar* name, mat4 value) {
+    int location = glGetUniformLocation(id, name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(value));
+}
