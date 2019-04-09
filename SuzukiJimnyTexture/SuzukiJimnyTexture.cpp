@@ -40,6 +40,13 @@ int main() {
     
     vector<float> vertices = Parser::loadPoints("Vertices.txt");
     vector<unsigned int> indices = Parser::loadIndices("Indices.txt");
+
+    /*
+    // Read our .obj file
+    std::vector< glm::vec3 > verwheel;
+    std::vector< glm::vec2 > uvs;
+    std::vector< glm::vec3 > normals; // Won't be used at the moment.
+    bool res = loadOBJ("Wheel.obj", verwheel, uvs, normals); */
     
     unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -50,6 +57,7 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, verwheel.size() * sizeof(glm::vec3), &verwheel[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indices.size(), &indices[0], GL_STATIC_DRAW);

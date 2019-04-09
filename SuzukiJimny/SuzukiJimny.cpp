@@ -73,7 +73,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     vector<float> vertices = Parser::loadPoints("Vertices.txt",false, 100);
-    
+
     unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
