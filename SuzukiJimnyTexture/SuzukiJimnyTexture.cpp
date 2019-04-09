@@ -74,9 +74,7 @@ int main() {
     GLFWwindow* window = createWindow(screenWidth, screenHeight, "Multicolor Pentagon");
     enableCamera(window);
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
-<<<<<<< HEAD
     
-    vector<float> vertices = Parser::loadPoints("Vertices.txt");
     vector<unsigned int> indices = Parser::loadIndices("Indices.txt");
 
     /*
@@ -85,11 +83,10 @@ int main() {
     std::vector< glm::vec2 > uvs;
     std::vector< glm::vec3 > normals; // Won't be used at the moment.
     bool res = loadOBJ("Wheel.obj", verwheel, uvs, normals); */
-=======
+
     glEnable(GL_DEPTH_TEST);
 
     vector<float> vertices = Parser::loadPoints("Vertices.txt",false, 100);
->>>>>>> 4d4fbecd0f6025b84a6b697a6deba37ed88ee825
     
     unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
