@@ -1,6 +1,6 @@
 COMP = g++
 FLAG = -o
-INPT = SuzukiJimny.cpp ../Util/Shader.cpp ../Util/Camera.cpp ../Util/Parser.cpp
+INPT = SuzukiJimnyTexture.cpp ../Util/Shader.cpp ../Util/Camera.cpp ../Util/Parser.cpp
 FBCK = -lGL -lGLEW -lglfw
 OUTP = app
 

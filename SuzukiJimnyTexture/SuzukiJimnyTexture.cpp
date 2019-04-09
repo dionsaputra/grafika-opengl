@@ -36,7 +36,7 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos) {
 }
 
 void scrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
-    camera.processMouseScroll(xOffset);
+    camera.processMouseScroll(yOffset);
 }
 
 GLFWwindow* createWindow(int width, int height, const char* title) {
