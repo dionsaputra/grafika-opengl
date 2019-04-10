@@ -2,7 +2,7 @@ COMP = g++
 FLAG = -o
 INPT = SuzukiJimny.cpp
 UTIL = ../Util/Parser.cpp ../Util/Shader.cpp ../Util/Camera.cpp
-FBCK = -lGL -lGLEW -lglfw
+FBCK = -lGLEW -lGL -lglfw
 OUTP = app
 
 all : program1

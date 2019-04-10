@@ -74,6 +74,16 @@ int main() {
     GLFWwindow* window = createWindow(screenWidth, screenHeight, "Multicolor Pentagon");
     enableCamera(window);
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
+    
+    vector<unsigned int> indices = Parser::loadIndices("Indices.txt");
+
+    /*
+    // Read our .obj file
+    std::vector< glm::vec3 > verwheel;
+    std::vector< glm::vec2 > uvs;
+    std::vector< glm::vec3 > normals; // Won't be used at the moment.
+    bool res = loadOBJ("Wheel.obj", verwheel, uvs, normals); */
+
     glEnable(GL_DEPTH_TEST);
 
     vector<float> vertices = Parser::loadPoints("Vertices.txt",false, 100);
@@ -86,6 +96,7 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, verwheel.size() * sizeof(glm::vec3), &verwheel[0], GL_STATIC_DRAW);
 
     // position attribute    
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);

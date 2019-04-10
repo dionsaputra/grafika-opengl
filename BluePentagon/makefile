@@ -1,7 +1,7 @@
 COMP = g++
 FLAG = -o
-INPT = BluePentagon.cpp
-FBCK = -lGL -lGLEW -lglfw
+INPT = tes.cpp
+FBCK = -lXrandr -lXrender -lXi -lGLEW -lGLU -lm -lGL -lm -lpthread -pthread -ldl -ldrm -lXdamage -lXfixes -lX11-xcb -lxcb-glx -lxcb-dri2 -lXxf86vm -lXext -lglfw3 -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp
 OUTP = app
 
 all : program1
