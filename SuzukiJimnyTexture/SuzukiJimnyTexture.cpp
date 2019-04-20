@@ -1,12 +1,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
-#include "stb_image.h"
+#include "../Util/stb_image.h"
 #include "../Util/Shader.hpp"
 #include "../Util/Parser.hpp"
 #include "../Util/Camera.cpp"
 using namespace glm;
-
 
 const float screenWidth = 800, screenHeight = 800;
 float lastX = screenWidth/2, lastY = screenHeight/2;
@@ -71,18 +70,11 @@ void enableCamera(GLFWwindow* window) {
 }
 
 int main() {
-    GLFWwindow* window = createWindow(screenWidth, screenHeight, "Multicolor Pentagon");
+    GLFWwindow* window = createWindow(screenWidth, screenHeight, "Suzuky Jimny Texture");
     enableCamera(window);
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     
     vector<unsigned int> indices = Parser::loadIndices("Indices.txt");
-
-    /*
-    // Read our .obj file
-    std::vector< glm::vec3 > verwheel;
-    std::vector< glm::vec2 > uvs;
-    std::vector< glm::vec3 > normals; // Won't be used at the moment.
-    bool res = loadOBJ("Wheel.obj", verwheel, uvs, normals); */
 
     glEnable(GL_DEPTH_TEST);
 
@@ -120,7 +112,7 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load and generate the texture
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("fabric.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("../Asset/fabric.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);

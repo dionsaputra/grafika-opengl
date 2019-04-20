@@ -30,7 +30,7 @@ void processInput(GLFWwindow *window){
 int main() {
     srand(time(NULL));
     int numOfTriangle = 92;
-    GLFWwindow* window = createWindow(800, 800, "Multicolor Pentagon");
+    GLFWwindow* window = createWindow(800, 800, "Low Poly Dragon");
 
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     

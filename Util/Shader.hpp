@@ -19,6 +19,8 @@ public:
     void setInt(const string &name, int value) const;
     void setFloat(const string &name, float value) const;
     void setMat4(const GLchar* name, mat4 value);
+    //void setVec3(const GLchar* name, vec3 value);
+    void setVec3(const std::string &name, float x, float y, float z) const;
 private:
     void checkCompileErrors(unsigned int shader, string type);
 };

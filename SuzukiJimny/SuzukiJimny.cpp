@@ -67,7 +67,7 @@ void enableCamera(GLFWwindow* window) {
 }
 
 int main() {
-    GLFWwindow* window = createWindow(screenWidth, screenHeight, "Multicolor Pentagon");
+    GLFWwindow* window = createWindow(screenWidth, screenHeight, "Suzuki Jimny");
     enableCamera(window);
     Shader shader("VertexShader.glsl", "FragmentShader.glsl");
     glEnable(GL_DEPTH_TEST);
