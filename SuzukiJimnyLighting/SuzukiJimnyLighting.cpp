@@ -112,9 +112,10 @@ int main() {
     glEnableVertexAttribArray(0);
 
     unsigned int diffuseMap = loadTexture("../Asset/container.png");
-    std::cout<<diffuseMap<<std::endl;
+    unsigned int specularMap = loadTexture("../Asset/container2_speculat.png");
     lightingShader.use();    
     lightingShader.setInt("material.diffuse", 0);
+    lightingShader.setInt("material.specular", 1);
     
     while (!glfwWindowShouldClose(window))
     {
@@ -138,21 +139,11 @@ int main() {
         lightingShader.setVec3("light.position", lightPos);
         lightingShader.setVec3("viewPos", camera.Position);
 
-        vec3 lightColor;
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
-
-        vec3 diffuseColor = lightColor * vec3(0.5f);
-        vec3 ambientColor = lightColor * vec3(0.2f);
-        lightingShader.setVec3("light.ambient",  ambientColor);
-        lightingShader.setVec3("light.diffuse",  diffuseColor);
+        lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+        lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
 
-        lightingShader.setVec3("material.ambient",  1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("material.diffuse",  1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-        lightingShader.setFloat("material.shininess", 32.0f);
+        lightingShader.setFloat("material.shininess", 64.0f);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
@@ -167,6 +158,9 @@ int main() {
         // bind diffuse map
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
+        // bind specular map
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
 
         // render the cube
         glBindVertexArray(cubeVAO);
