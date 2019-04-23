@@ -26,6 +26,7 @@ void processInput(GLFWwindow *window);
 void enableCamera(GLFWwindow* window);
 unsigned int loadTexture(char const * path);
 
+
 int main() {
     GLFWwindow* window = createWindow(screenWidth, screenHeight, "Suzuky Jimny Texture");
     enableCamera(window);
@@ -34,7 +35,8 @@ int main() {
     Shader lightingShader("lightingShader.vs", "lightingShader.fs");
     Shader lampShader("lampShader.vs", "lampShader.fs");
 
-    float vertices[] = {
+    vector<float> car_vertices = Parser::loadPoints("Vertices.txt",false, 100);
+    float lamp_vertices[] = {
         // positions          // normals           // texture coords
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
@@ -79,14 +81,15 @@ int main() {
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
-    unsigned int VBO, cubeVAO;
-    glGenVertexArrays(1, &cubeVAO);
-    glGenBuffers(1, &VBO);
+    unsigned int carVBO, carVAO;
+    // configure car
+    glGenVertexArrays(1, &carVAO);
+    glGenBuffers(1, &carVBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, carVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*car_vertices.size(), &car_vertices[0], GL_STATIC_DRAW);
 
-    glBindVertexArray(cubeVAO);
+    glBindVertexArray(carVAO);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -101,13 +104,16 @@ int main() {
     glEnableVertexAttribArray(2);
 
     // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
-    unsigned int lightVAO;
+    unsigned int lightVAO, lightVBO;
     glGenVertexArrays(1, &lightVAO);
+    glGenBuffers(1, &lightVBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(lamp_vertices), lamp_vertices, GL_STATIC_DRAW);
+
     glBindVertexArray(lightVAO);
 
-    // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
+    // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -163,8 +169,8 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, specularMap);
 
         // render the cube
-        glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(carVAO);
+        glDrawArrays(GL_TRIANGLES, 0, car_vertices.size()*3);
 
         // also draw the lamp object
         lampShader.use();
@@ -187,9 +193,10 @@ int main() {
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &cubeVAO);
+    glDeleteVertexArrays(1, &carVAO);
     glDeleteVertexArrays(1, &lightVAO);
-    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &carVBO);
+    glDeleteBuffers(1, &lightVBO);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
