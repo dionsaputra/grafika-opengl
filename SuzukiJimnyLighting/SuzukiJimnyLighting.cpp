@@ -149,7 +149,7 @@ int main() {
         lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
 
-        lightingShader.setFloat("material.shininess", 64.0f);
+        lightingShader.setFloat("material.shininess", 81.0f);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
