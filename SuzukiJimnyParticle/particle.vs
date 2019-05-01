@@ -5,8 +5,9 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform vec3 offset;
+uniform mat4 transform;
 
-void main()
-{
-    gl_Position = projection * view * model * (vec4(aPos, 1.0) + vec4(offset, 1.0f));
+void main() {
+    float scale = 0.01f;
+    gl_Position = projection * view * vec4((aPos.xy * scale) + offset.xy, 0.0, 1.0);
 }

@@ -35,16 +35,17 @@ public:
     Shader shader;
     vec4 color;
 
-    ParticleGenerator(int amount, int type, vec3 origin=vec3(0.0f, 0.0f, 0.0f)) {
+    ParticleGenerator(int amount, int type, vec3 origin=vec3(-1.0f, 1.0f, 0.0f)) {
         Shader particleShader;
         particleShader = Shader("particle.vs", "particle.fs");
         this->shader = particleShader;
         this->amount = amount;
 
         for (int i=0; i<amount; i++) {
-            float x = (rand() % 100)/100;
-            float y = (rand() % 100)/100;
-            float z = (rand() % 100)/100;
+            float x = (rand() % 100)/100.0f;
+            float y = (rand() % 100)/100.0f;
+            float z = (rand() % 100)/100.0f;
+            // cout<<x<<" "<<y<<" "<<z<<endl;
             vec3 offset(x, y, z);
 
             float r, g, b;
@@ -57,7 +58,11 @@ public:
 
             float vx, vy, vz;
             if (type == PARTICLE_RAIN) {
-                vx = 0.001f; vy = -0.01f; vz = 0.001f;
+                // vx = (rand()%1000)/100000.0f;
+                vx = 0.00f;
+                // vy = (rand()%1000)/100000.0f * (-1.0f);
+                vy = -0.01f;
+                vz = (rand()%1000)/100000.0f;
             } else if (type == PARTICLE_SMOKE) {
                 vx = 0.001f; vy = 0.001f; vz = 0.01f;
             }
@@ -91,11 +96,13 @@ public:
         mat4 model(1.0f);
         mat4 view(1.0f);
         mat4 projection(1.0f);
+        mat4 transform(1.0f);
 
         shader.setMat4("model", model);
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
         shader.setVec4("color", color);
+        shader.setMat4("transform", transform);
         glBindVertexArray(VAO);
 
         for (int i=0; i<amount; i++) {

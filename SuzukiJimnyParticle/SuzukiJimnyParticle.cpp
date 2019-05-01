@@ -127,7 +127,7 @@ int main() {
     // initialize rain and smoke
     vec3 smoke_origin = vec3(-0.35f, -0.425f, -0.625f);
     ParticleGenerator rain = ParticleGenerator(1000, 0);
-    ParticleGenerator smoke = ParticleGenerator(1000, 0, smoke_origin);
+    ParticleGenerator smoke = ParticleGenerator(1000, 1, smoke_origin);
 
     while (!glfwWindowShouldClose(window))
     {
