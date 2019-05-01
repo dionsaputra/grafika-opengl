@@ -13,6 +13,7 @@ public:
     vec3 offset;
     vec3 speed;
     vec4 color;
+    vec3 origin;
     int type;   // 0: rain, 1: smoke
     int life = 1000;
 
@@ -22,7 +23,7 @@ public:
         return result;
     }
 
-    Particle(vec3 offset, vec3 speed, vec4 color, int type) {
+    Particle(vec3 offset, vec3 speed, vec4 color, int type, vec3 origin) {
         this->offset = offset;
         this->speed = speed;
         this->color = color;
@@ -35,12 +36,12 @@ public:
         
     }
 
-    void update() {
+    void updateRain() {
         offset += speed;
         if (offset.y <= -5.0f) {
             offset.y = 5.0f;
         }
-        if (offset.x >= 5.0f) {
+        if (offset.x >= 5.0f ) {
             offset.x = -5.0f;
         }
     }
@@ -82,7 +83,7 @@ public:
         if (type == PARTICLE_RAIN) {
             generateRain();
         } else {
-            generateRain();
+            generateSmoke(origin);
         }
         
         float particle[] = {
@@ -125,7 +126,27 @@ public:
             
             vec3 speed(vx, vy, vz);
 
-            particles.push_back(Particle(offset, speed, color, 0));
+            particles.push_back(Particle(offset, speed, color, 0, vec3(-5, 5, 5)));
+        }
+
+    }
+
+    void generateSmoke(vec3 origin) {
+        for (int i=0; i<amount; i++) {
+            float x = random(-0.01, 0.01);
+            float y = random(-0.01, 0.01);
+            float z = random(-0.01, 0.01);
+
+            vec3 offset(x, y, z);           
+            color = vec4(0.75f, 0.75f, 0.75f, 1.0f);
+            float vx, vy, vz;
+            vx = 0.001f;
+            vy = random(-0.015f, -0.001f);
+            vz = random(-0.001f, 0.001f);
+            
+            vec3 speed(vx, vy, vz);
+
+            particles.push_back(Particle(origin + offset, speed, color, 1, origin));
         }
 
     }
