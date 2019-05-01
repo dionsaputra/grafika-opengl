@@ -35,7 +35,7 @@ public:
     Shader shader;
     vec4 color;
 
-    ParticleGenerator(int amount, int type) {
+    ParticleGenerator(int amount, int type, vec3 origin=vec4(0.0f, 0.0f, 0.0f)) {
         Shader particleShader("particle.vs", "particle.fs");
         this->shader = particleShader;
         this->amount = amount;
@@ -62,7 +62,7 @@ public:
             }
             vec3 speed(vx, vy, vz);
 
-            particles.push_back(Particle(offset, speed, color, type));
+            particles.push_back(Particle(offset+origin, speed, color, type));
         }
 
         float particle[] = {

@@ -81,8 +81,8 @@ int main() {
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
-    unsigned int carVBO, carVAO;
     // configure car
+    unsigned int carVBO, carVAO;
     glGenVertexArrays(1, &carVAO);
     glGenBuffers(1, &carVBO);
 
@@ -122,33 +122,11 @@ int main() {
     lightingShader.use();    
     lightingShader.setInt("material.diffuse", 0);
     lightingShader.setInt("material.specular", 1);
-    
-    // smoke
-    float smoke[] = {
-        0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 
-        0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-        1.0f, 0.0f, 1.0f, 0.0f, 0.0f
-    };
-
-    Shader smokeShader("smoke.vs", "smoke.fs");
-    smokeShader.use();
-    unsigned int smokeVAO, smokeVBO;
-    glGenVertexArrays(1, &smokeVAO);
-    glGenBuffers(1, &smokeVBO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, smokeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(smoke), smoke, GL_STATIC_DRAW);
-    glBindVertexArray(smokeVAO);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(2*sizeof(float)));
-    glEnableVertexAttribArray(1);
+    // initialize rain and smoke
+    vec3 smoke_origin = vec3(-0.35f, -0.425f, -0.625f);
+    ParticleGenerator rain = ParticleGenerator(1000, 0);
+    ParticleGenerator smoke = ParticleGenerator(1000, 0);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -211,11 +189,9 @@ int main() {
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        smokeShader.use();
-        smokeShader.setMat4("projection", projection);
-
-        glBindVertexArray(smokeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // draw rain and smoke
+        rain.draw();
+        smoke.draw(smoke_origin);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
