@@ -24,6 +24,12 @@ public:
 
     void update() {
         offset += speed;
+        if (offset.y <= -1.0f) {
+            offset.y = 1.0f;
+        }
+        if (offset.x >= 1.0f) {
+            offset.x = -1.0f;
+        }
     }
 };
 
@@ -41,36 +47,12 @@ public:
         this->shader = particleShader;
         this->amount = amount;
 
-        for (int i=0; i<amount; i++) {
-            float x = (rand() % 100)/100.0f;
-            float y = (rand() % 100)/100.0f;
-            float z = (rand() % 100)/100.0f;
-            // cout<<x<<" "<<y<<" "<<z<<endl;
-            vec3 offset(x, y, z);
-
-            float r, g, b;
-            if (type == PARTICLE_RAIN) {
-                r = 0.0f; g = 0.47f; b = 0.75f;
-            } else if (type == PARTICLE_SMOKE) {
-                r = 0.96f; g = 0.96f; b = 0.96f;
-            }
-            this->color = vec4(r, g, b, 1.0f);
-
-            float vx, vy, vz;
-            if (type == PARTICLE_RAIN) {
-                // vx = (rand()%1000)/100000.0f;
-                vx = 0.00f;
-                // vy = (rand()%1000)/100000.0f * (-1.0f);
-                vy = -0.01f;
-                vz = (rand()%1000)/100000.0f;
-            } else if (type == PARTICLE_SMOKE) {
-                vx = 0.001f; vy = 0.001f; vz = 0.01f;
-            }
-            vec3 speed(vx, vy, vz);
-
-            particles.push_back(Particle(offset+origin, speed, color, type));
+        if (type == PARTICLE_RAIN) {
+            generateRain();
+        } else {
+            generateRain();
         }
-
+        
         float particle[] = {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
@@ -90,17 +72,42 @@ public:
         glEnableVertexAttribArray(0);
     }
 
-    void draw() {
+    float random(float start, float end) {
+        float f = (rand() % 100)/100.0;
+        double result = start + f * (end - start);
+        return result;
+    }
+
+    void generateRain() {
+        for (int i=0; i<amount; i++) {
+            float x = random(-1.0f, 1.0f);
+            float y = 1.0f;
+            float z = random(-1.0f, 1.0f);
+
+            vec3 offset(x, y, z);           
+            color = vec4(0.0f, 0.47f, 0.75f, 1.0f);
+            float vx, vy, vz;
+            vx = 0.001f;
+            vy = random(-0.015f, -0.001f);
+            vz = random(0.001f, 0.005f);
+            
+            vec3 speed(vx, vy, vz);
+
+            particles.push_back(Particle(offset, speed, color, 0));
+        }
+
+    }
+
+    void draw(mat4 view) {
         shader.use();
 
         mat4 model(1.0f);
-        mat4 view(1.0f);
-        mat4 projection(1.0f);
+        // mat4 view(1.0f);
         mat4 transform(1.0f);
 
         shader.setMat4("model", model);
         shader.setMat4("view", view);
-        shader.setMat4("projection", projection);
+        // shader.setMat4("projection", projection);
         shader.setVec4("color", color);
         shader.setMat4("transform", transform);
         glBindVertexArray(VAO);

@@ -191,8 +191,8 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // draw rain and smoke
-        rain.draw();
-        smoke.draw();
+        rain.draw(view);
+        // smoke.draw(projection);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
