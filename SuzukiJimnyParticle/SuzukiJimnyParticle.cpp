@@ -5,6 +5,7 @@
 #include "../Util/Shader.hpp"
 #include "../Util/Parser.hpp"
 #include "../Util/Camera.cpp"
+#include "ParticleGenerator.cpp"
 using namespace glm;
 
 const float screenWidth = 800, screenHeight = 800;
@@ -126,7 +127,7 @@ int main() {
     // initialize rain and smoke
     vec3 smoke_origin = vec3(-0.35f, -0.425f, -0.625f);
     ParticleGenerator rain = ParticleGenerator(1000, 0);
-    ParticleGenerator smoke = ParticleGenerator(1000, 0);
+    ParticleGenerator smoke = ParticleGenerator(1000, 0, smoke_origin);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -191,7 +192,7 @@ int main() {
 
         // draw rain and smoke
         rain.draw();
-        smoke.draw(smoke_origin);
+        smoke.draw();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

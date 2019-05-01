@@ -1,10 +1,10 @@
 #version 330 core
 // in vec2 TexCoords;
-in vec4 ParticleColor;
-out vec4 color;
+out vec4 ParticleColor;
+uniform vec4 color;
 
 // uniform sampler2D sprite;
 
 void main() {
-    color = /*texture(sprite, TexCoords) * */ ParticleColor;
+    ParticleColor = color;
 }

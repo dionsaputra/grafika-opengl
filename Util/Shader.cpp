@@ -1,6 +1,8 @@
 #include "Shader.hpp"
 
-Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
+Shader::Shader(){};
+
+Shader::Shader(const string vertexPath, const string fragmentPath) {
     
     // read shader from file
     string vertexCode;
@@ -82,6 +84,10 @@ void Shader::setMat4(const GLchar* name, mat4 value) {
     int location = glGetUniformLocation(id, name);
     glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(value));
 }
+
+void Shader::setVec4(const std::string &name, const glm::vec4 &value) const {
+    glUniform4f(glGetUniformLocation(id, name.c_str()), value.x, value.y, value.z, value.w);
+};
 
 void Shader::setVec3(const std::string &name, const glm::vec3 &value) const { 
     glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]); 

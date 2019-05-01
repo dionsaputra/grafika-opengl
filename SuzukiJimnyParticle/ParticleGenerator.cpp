@@ -35,8 +35,9 @@ public:
     Shader shader;
     vec4 color;
 
-    ParticleGenerator(int amount, int type, vec3 origin=vec4(0.0f, 0.0f, 0.0f)) {
-        Shader particleShader("particle.vs", "particle.fs");
+    ParticleGenerator(int amount, int type, vec3 origin=vec3(0.0f, 0.0f, 0.0f)) {
+        Shader particleShader;
+        particleShader = Shader("particle.vs", "particle.fs");
         this->shader = particleShader;
         this->amount = amount;
 
@@ -78,7 +79,7 @@ public:
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(particle), particle, GL_STREAM_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(0);
@@ -98,7 +99,7 @@ public:
         glBindVertexArray(VAO);
 
         for (int i=0; i<amount; i++) {
-            shader.setVec4("offset", particles[i].offset);
+            shader.setVec3("offset", particles[i].offset);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             particles[i].update();
         }

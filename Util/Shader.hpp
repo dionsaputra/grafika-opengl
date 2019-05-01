@@ -7,18 +7,21 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <string>
 using namespace std;
 using namespace glm;
 
-class Shader {
+class Shader { 
 public:
     unsigned int id;
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+    Shader();
+    Shader(const string vertexPath, const string fragmentPath);
     void use();
     void setBool(const string &name, bool value) const;
     void setInt(const string &name, int value) const;
     void setFloat(const string &name, float value) const;
     void setMat4(const GLchar* name, mat4 value);
+    void setVec4(const std::string &name, const glm::vec4 &value) const;
     void setVec3(const std::string &name, const glm::vec3 &value) const;
     void setVec3(const std::string &name, float x, float y, float z) const;
 private:
