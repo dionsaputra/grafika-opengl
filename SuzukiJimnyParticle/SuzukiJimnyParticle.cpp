@@ -24,9 +24,11 @@ void scrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 GLFWwindow* createWindow(int width, int height, const char* title);
 void processInput(GLFWwindow *window);
 void enableCamera(GLFWwindow* window);
+unsigned int loadTexture(char const * path);
+
 
 int main() {
-    GLFWwindow* window = createWindow(screenWidth, screenHeight, "Suzuky Jimny Texture");
+    GLFWwindow* window = createWindow(screenWidth, screenHeight, "Suzuky Jimny Particle");
     enableCamera(window);
     glEnable(GL_DEPTH_TEST);
 
@@ -115,6 +117,39 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    unsigned int diffuseMap = loadTexture("../Asset/container.png");
+    unsigned int specularMap = loadTexture("../Asset/container2_specular.png");
+    lightingShader.use();    
+    lightingShader.setInt("material.diffuse", 0);
+    lightingShader.setInt("material.specular", 1);
+    
+    // smoke
+    float smoke[] = {
+        0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+
+        0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        1.0f, 0.0f, 1.0f, 0.0f, 0.0f
+    };
+
+    Shader smokeShader("smoke.vs", "smoke.fs");
+    smokeShader.use();
+    unsigned int smokeVAO, smokeVBO;
+    glGenVertexArrays(1, &smokeVAO);
+    glGenBuffers(1, &smokeVBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, smokeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(smoke), smoke, GL_STATIC_DRAW);
+    glBindVertexArray(smokeVAO);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(2*sizeof(float)));
+    glEnableVertexAttribArray(1);
+
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -133,7 +168,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         // be sure to activate shader when setting uniforms/drawing objects
-        lightingShader.use();
+         lightingShader.use();
         lightingShader.setVec3("light.position", lightPos);
         lightingShader.setVec3("viewPos", camera.Position);
 
@@ -153,6 +188,13 @@ int main() {
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.setMat4("model", model);
 
+        // bind diffuse map
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, diffuseMap);
+        // bind specular map
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
+
         // render the cube
         glBindVertexArray(carVAO);
         glDrawArrays(GL_TRIANGLES, 0, car_vertices.size()*3);
@@ -169,6 +211,11 @@ int main() {
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        smokeShader.use();
+        smokeShader.setMat4("projection", projection);
+
+        glBindVertexArray(smokeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -241,4 +288,39 @@ void enableCamera(GLFWwindow* window) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback); 
+}
+
+// utility function for loading a 2D texture from file
+// ---------------------------------------------------
+unsigned int loadTexture(char const * path){
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+    
+    int width, height, nrComponents;
+    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data) {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    } else {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
+
+    return textureID;
 }
