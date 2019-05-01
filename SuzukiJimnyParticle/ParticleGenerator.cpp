@@ -34,16 +34,22 @@ public:
     int amount;
     Shader shader;
     vec4 color;
+    mat4 model;
+    mat4 view;
+    mat4 projection;
+    mat4 transform;
 
     ParticleGenerator(int amount, int type, vec3 origin=vec3(-1.0f, 1.0f, 0.0f)) {
         Shader particleShader;
         particleShader = Shader("particle.vs", "particle.fs");
         this->shader = particleShader;
         this->amount = amount;
-
+        this->model = mat4(1.0f);
+        this->transform = mat4(1.0f);
         for (int i=0; i<amount; i++) {
             float x = (rand() % 100)/100.0f;
             float y = (rand() % 100)/100.0f;
+            // float y = 1;
             float z = (rand() % 100)/100.0f;
             // cout<<x<<" "<<y<<" "<<z<<endl;
             vec3 offset(x, y, z);
@@ -92,11 +98,6 @@ public:
 
     void draw() {
         shader.use();
-
-        mat4 model(1.0f);
-        mat4 view(1.0f);
-        mat4 projection(1.0f);
-        mat4 transform(1.0f);
 
         shader.setMat4("model", model);
         shader.setMat4("view", view);
