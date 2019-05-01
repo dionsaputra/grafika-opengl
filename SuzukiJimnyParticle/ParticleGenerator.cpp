@@ -35,7 +35,7 @@ public:
     }
 
     void updateSmoke(){
-        
+        offset += speed;      
     }
 };
 
@@ -119,9 +119,9 @@ public:
             vec3 offset(x, y, z);           
             color = vec4(0.75f, 0.75f, 0.75f, 1.0f);
             float vx, vy, vz;
-            vx = 0.001f;
-            vy = random(-0.015f, -0.001f);
-            vz = random(-0.001f, 0.001f);
+            vx = random(-0.001f, 0.001f);
+            vy = random(0.001f, 0.002f);
+            vz = random(-0.002f, -0.001f);
             
             vec3 speed(vx, vy, vz);
 
@@ -143,7 +143,11 @@ public:
         for (int i=0; i<amount; i++) {
             shader.setVec3("offset", particles[i].offset);
             glDrawArrays(GL_TRIANGLES, 0, 6);
-            particles[i].update();
+            if(particles[i].type == PARTICLE_RAIN){
+                particles[i].updateRain();
+            } else {
+                particles[i].updateSmoke();
+            }
         }
     }
 };
