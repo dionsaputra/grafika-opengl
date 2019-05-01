@@ -15,6 +15,13 @@ public:
     vec4 color;
     vec3 origin;
     int type;   // 0: rain, 1: smoke
+    int life = 1000;
+
+    float random(float start, float end) {
+        float f = (rand() % 100)/100.0;
+        double result = start + f * (end - start);
+        return result;
+    }
 
     Particle(vec3 offset, vec3 speed, vec4 color, int type, vec3 origin) {
         this->offset = offset;
@@ -22,21 +29,37 @@ public:
         this->color = color;
         this->type = type;
         this->origin = origin;
+        if (type == PARTICLE_RAIN) {
+            this->life = (int) random(1000, 2000);
+        } else {
+            this->life = (int) random(200, 500);
+        }
+        
+    }
+
+    void updateSmoke() {
+        offset += speed; life --; 
+        if(life > 0){
+            color.a -= (1/life);
+        }
+        if(life <= 0 ) {
+            offset = origin;
+            life = (int) random(200, 500);
+        };
     }
 
     void updateRain() {
-        offset += speed;
-        if (offset.y <= -5.0f) {
+        offset += speed; life--; color.a -= 0.1;
+        if (life <= 0.0f) {
             offset.y = 5.0f;
+            life = 1000;
+            color.a = 1.0f;
         }
-        if (offset.x >= 5.0f ) {
-            offset.x = -5.0f;
-        }
+        if (offset.y <= -5.0f) offset.y = 5.0f;
+        if (offset.x >= 5.0f) offset.x = -5.0f;
+        if (offset.z >= 5.0f) offset.z = -5.0f;
     }
 
-    void updateSmoke(){
-        offset += speed;      
-    }
 };
 
 class ParticleGenerator {
@@ -80,7 +103,7 @@ public:
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(particle), particle, GL_STREAM_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
     }
 
@@ -143,7 +166,7 @@ public:
         for (int i=0; i<amount; i++) {
             shader.setVec3("offset", particles[i].offset);
             glDrawArrays(GL_TRIANGLES, 0, 6);
-            if(particles[i].type == PARTICLE_RAIN){
+            if (particles[i].type == PARTICLE_RAIN) {
                 particles[i].updateRain();
             } else {
                 particles[i].updateSmoke();
