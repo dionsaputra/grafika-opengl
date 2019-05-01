@@ -8,5 +8,5 @@ uniform vec3 offset;
 
 void main()
 {
-    gl_Position = projection * view * model * (vec4(aPos, 1.0) + offset);
+    gl_Position = projection * view * model * (vec4(aPos, 1.0) + vec4(offset, 1.0f));
 }
