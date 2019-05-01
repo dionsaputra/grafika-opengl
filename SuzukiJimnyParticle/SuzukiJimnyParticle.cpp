@@ -81,8 +81,8 @@ int main() {
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
-    unsigned int carVBO, carVAO;
     // configure car
+    unsigned int carVBO, carVAO;
     glGenVertexArrays(1, &carVAO);
     glGenBuffers(1, &carVBO);
 
@@ -122,7 +122,12 @@ int main() {
     lightingShader.use();    
     lightingShader.setInt("material.diffuse", 0);
     lightingShader.setInt("material.specular", 1);
-    
+
+    // initialize rain and smoke
+    vec3 smoke_origin = vec3(-0.35f, -0.425f, -0.625f);
+    ParticleGenerator rain = ParticleGenerator(1000, 0);
+    ParticleGenerator smoke = ParticleGenerator(1000, 0);
+
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -184,6 +189,9 @@ int main() {
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        // draw rain and smoke
+        rain.draw();
+        smoke.draw(smoke_origin);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
