@@ -24,11 +24,11 @@ public:
 
     void update() {
         offset += speed;
-        if (offset.y <= -1.0f) {
-            offset.y = 1.0f;
+        if (offset.y <= -5.0f) {
+            offset.y = 5.0f;
         }
-        if (offset.x >= 1.0f) {
-            offset.x = -1.0f;
+        if (offset.x >= 5.0f) {
+            offset.x = -5.0f;
         }
     }
 };
@@ -86,16 +86,16 @@ public:
 
     void generateRain() {
         for (int i=0; i<amount; i++) {
-            float x = random(-1.0f, 1.0f);
+            float x = random(-5.0f, 5.0f);
             float y = 1.0f;
-            float z = random(-1.0f, 1.0f);
+            float z = random(-5.0f, 5.0f);
 
             vec3 offset(x, y, z);           
             color = vec4(0.0f, 0.47f, 0.75f, 1.0f);
             float vx, vy, vz;
             vx = 0.001f;
             vy = random(-0.015f, -0.001f);
-            vz = random(0.001f, 0.005f);
+            vz = random(-0.001f, 0.001f);
             
             vec3 speed(vx, vy, vz);
 

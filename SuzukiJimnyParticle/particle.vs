@@ -9,5 +9,5 @@ uniform mat4 transform;
 
 void main() {
     float scale = 0.01f;
-    gl_Position = projection * vec4((aPos.xy * scale) + offset.xy, 0.0, 1.0);
+    gl_Position = projection * view * model * (transform * vec4(aPos, 1.0) * scale + vec4(offset, 1.0));
 }
